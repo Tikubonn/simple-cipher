@@ -4,11 +4,11 @@ export CFLAGS=-Wall
 # export CFLAGS=-Wall -g -Og #for debug build.
 # export CFLAGS=-Wall -O3 -finline-functions #for release build.
 
-all: dist/include/simple-cypher/simple-cypher.h dist/lib/libsimplecypher.a dist/lib/libsimplecypher.so bin/simple-cypher
+all: dist/include/simple-cipher/simple-cipher.h dist/lib/libsimplecipher.a dist/lib/libsimplecipher.so bin/simple-cipher
 
 .PHONY: clean
 clean:
-	rm -f src/simple-cypher.o
+	rm -f src/simple-cipher.o
 	rm -f src/main.o
 	make -C test clean
 
@@ -20,14 +20,14 @@ test: all
 test-bin: all
 	make -C test test-bin SIMPLE_CYPHER_BIN=$(CURDIR)/bin
 
-src/simple-cypher.o: src/simple-cypher.c src/simple-cypher.h
-	$(GCC) $(CFLAGS) -c -o src/simple-cypher.o src/simple-cypher.c
+src/simple-cipher.o: src/simple-cipher.c src/simple-cipher.h
+	$(GCC) $(CFLAGS) -c -o src/simple-cipher.o src/simple-cipher.c
 
-dist/include/simple-cypher:
-	mkdir -p dist/include/simple-cypher
+dist/include/simple-cipher:
+	mkdir -p dist/include/simple-cipher
 
-dist/include/simple-cypher/simple-cypher.h: src/simple-cypher.h | dist/include/simple-cypher
-	cp src/simple-cypher.h dist/include/simple-cypher/simple-cypher.h
+dist/include/simple-cipher/simple-cipher.h: src/simple-cipher.h | dist/include/simple-cipher
+	cp src/simple-cipher.h dist/include/simple-cipher/simple-cipher.h
 
 dist:
 	mkdir -p dist
@@ -35,11 +35,11 @@ dist:
 dist/lib:
 	mkdir -p dist/lib
 
-dist/lib/libsimplecypher.a: src/simple-cypher.o | dist/lib
-	ar r dist/lib/libsimplecypher.a src/simple-cypher.o
+dist/lib/libsimplecipher.a: src/simple-cipher.o | dist/lib
+	ar r dist/lib/libsimplecipher.a src/simple-cipher.o
 
-dist/lib/libsimplecypher.so: src/simple-cypher.o | dist/lib
-	$(GCC) $(CFLAGS) -shared -o dist/lib/libsimplecypher.so src/simple-cypher.o
+dist/lib/libsimplecipher.so: src/simple-cipher.o | dist/lib
+	$(GCC) $(CFLAGS) -shared -o dist/lib/libsimplecipher.so src/simple-cipher.o
 
 bin:
 	mkdir -p bin
@@ -47,5 +47,5 @@ bin:
 src/main.o: src/main.c dist/include
 	$(GCC) $(CFLAGS) -Idist/include -c -o src/main.o src/main.c
 
-bin/simple-cypher: src/main.o dist/lib/libsimplecypher.a | bin
-	$(GCC) $(CFLAGS) -Ldist/lib -o bin/simple-cypher src/main.o -lsimplecypher
+bin/simple-cipher: src/main.o dist/lib/libsimplecipher.a | bin
+	$(GCC) $(CFLAGS) -Ldist/lib -o bin/simple-cipher src/main.o -lsimplecipher

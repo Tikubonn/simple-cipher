@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <simple-cypher/simple-cypher.h>
+#include <simple-cipher/simple-cipher.h>
 
 static inline int parse_uint_as_hexadecimal (const char *str, uintmax_t *valuep){
   uintmax_t value = 0;
@@ -192,8 +192,8 @@ static inline int parse_args (int argc, char **argv, FILE **inputp, FILE **outpu
 }
 
 const char HELP_MESSAGE[] = 
-"Usage: simple-cypher [OPTION]... -k KEY [FILE]\n"
-"Encrypt or decrypt FILE with simple-cypher.\n"
+"Usage: simple-cipher [OPTION]... -k KEY [FILE]\n"
+"Encrypt or decrypt FILE with simple-cipher.\n"
 "\n"
 "Options:\n"
 "  -o file: An output file. default is stdout.\n"
@@ -206,7 +206,7 @@ const char HELP_MESSAGE[] =
 ;
 
 const char VERSION_MESSAGE[] = 
-"simple-cypher 0.1.0\n"
+"simple-cipher 0.1.0\n"
 ;
 
 int main (int argc, char **argv){
@@ -228,8 +228,8 @@ int main (int argc, char **argv){
     return 0;
   }
   else {
-    simple_cypher cypher;
-    simple_cypher_setup(key, &cypher);
+    simple_cipher cipher;
+    simple_cipher_setup(key, &cipher);
     while (true){
       uint8_t readdata[4096];
       size_t readsize = fread(readdata, 1, sizeof(readdata), input);
@@ -242,7 +242,7 @@ int main (int argc, char **argv){
           break;
         }
       }
-      simple_cypher_encrypt_decrypt(readdata, readsize, &cypher, readdata);
+      simple_cipher_encrypt_decrypt(readdata, readsize, &cipher, readdata);
       size_t writtensize = fwrite(readdata, 1, readsize, output);
       if (writtensize < readsize){
         if (ferror(output)){
